@@ -35,6 +35,7 @@ var specWithCombine = new HumanIsLife().Combine(new HumanIncludeItems());
 var specWithCombineWith = new HumanIsLife().CombineWith<HumanIncludeItems>();
 var result = dbContext.Humen.FindAll(spec);
 ```
+A combination of specifications is just a Chain of Responsibility pattern.
 # The resulting result
 We got a solution that allows us to apply specifications on the database side, and not in the memory of the client application, which allows us to optimize memory consumption for certain requests.
 

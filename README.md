@@ -24,3 +24,14 @@ public class HumanIsLife : Specification<Human>
     }
 }
 ```
+To apply the specification you created, you need to instantiate it and use one of the Find or FindAll extension methods as shown below:
+```csharp
+var spec = new HumanIsLife();
+var result = dbContext.Humen.FindAll(spec);
+```
+If you need to apply several specifications to one Find or FindAll method, then you need to use the Combine or CombineWith methods, example below:
+```csharp
+var specWithCombine = new HumanIsLife().Combine(new HumanIncludeItems());
+var specWithCombineWith = new HumanIsLife().CombineWith<HumanIncludeItems>();
+var result = dbContext.Humen.FindAll(spec);
+```

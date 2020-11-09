@@ -17,10 +17,10 @@ This solution certainly has its drawbacks, but the main task was solved.
 In order to implement your specification, you need to inherit from the base Specification class and implement the ApplySpecificationInternal method, setting your Linq2Sql logic in it as shown below:
 ```csharp
 public class HumanIsLife : Specification<Human>
+{
+    protected override IQueryable<Human> ApplySpecificationInternal(IQueryable<Human> models)
     {
-        protected override IQueryable<Human> ApplySpecificationInternal(IQueryable<Human> models)
-        {
-            return models.Where(h => h.IsDead == false);
-        }
+        return models.Where(h => h.IsDead == false);
     }
+}
 ```

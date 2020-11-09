@@ -35,3 +35,10 @@ var specWithCombine = new HumanIsLife().Combine(new HumanIncludeItems());
 var specWithCombineWith = new HumanIsLife().CombineWith<HumanIncludeItems>();
 var result = dbContext.Humen.FindAll(spec);
 ```
+# The resulting result
+We got a solution that allows us to apply specifications on the database side, and not in the memory of the client application, which allows us to optimize memory consumption for certain requests.
+
+Of course, this is not the best solution that came to my mind, but it fully satisfies the ideology of the Specifications pattern, all our business requirements are in one place, and we can support them without any problems.
+
+Thank you for your attention to this project, if you have any suggestions for improvement or just constructive criticism, I would be glad to receive your feedback!
+Don't get sick, be happy!

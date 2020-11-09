@@ -13,3 +13,14 @@ In the future, I wanted to separate the Specification pattern for working and fi
 #### Summary
 As a result, you can see a non-standard solution using the Specifications pattern.
 This solution certainly has its drawbacks, but the main task was solved.
+# Example
+In order to implement your specification, you need to inherit from the base Specification class and implement the ApplySpecificationInternal method, setting your Linq2Sql logic in it as shown below:
+```csharp
+public class HumanIsLife : Specification<Human>
+    {
+        protected override IQueryable<Human> ApplySpecificationInternal(IQueryable<Human> models)
+        {
+            return models.Where(h => h.IsDead == false);
+        }
+    }
+```

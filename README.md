@@ -5,9 +5,6 @@ The main motivation and goal in creating this project was mastering the 'Specifi
 I decided to use ```Expression<Func<TMode, bool>>``` as my main tool.
 Thanks to expression trees, we can access both Linq2Sql and Linq2Objects without any problems, this is extremely powerful!
 
-#### Summary
-As a result, you can see a non-standard solution using the Specifications pattern.
-This solution certainly has its drawbacks, but the main task was solved.
 # Example
 In order to implement your specification, you need to inherit from the base Specification class and implement the ```GetSpecification()``` method, setting your ```Expression<Func<Human, bool>>``` it as shown below:
 ```csharp

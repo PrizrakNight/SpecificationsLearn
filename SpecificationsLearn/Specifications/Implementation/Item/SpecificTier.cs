@@ -17,10 +17,5 @@ namespace SpecificationsLearn.Specifications.Implementation
         {
             return item => item.Tier == _tier;
         }
-
-        //protected override IQueryable<Item> ApplySpecificationInternal(IQueryable<Item> models)
-        //{
-        //    return models.Where(i => i.Tier == _tier);
-        //}
     }
 }

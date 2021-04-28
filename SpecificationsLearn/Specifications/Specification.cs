@@ -27,7 +27,6 @@ namespace SpecificationsLearn.Specifications
 
             _combinedExpression = Expression.Lambda<Func<TModel, bool>>(expression, parameter);
 
-
             return this;
         }
 

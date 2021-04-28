@@ -35,7 +35,7 @@ var spec = new HumanIsLife().Or(new HumanIsDead().And(new HumanNameMatches("Adri
 var result = dbContext.Humen.FindAllBySpec(spec);
 ```
 
-Of course, you can add extension methods for the ISpecification<TModel> interface to make it easier to combine specifications and do something like:
+Of course, you can add extension methods for the ```ISpecification<TModel>``` interface to make it easier to combine specifications and do something like:
 ```csharp
 var spec = Specification.Create<HumanIsLife>().Or<HumanIsDead>().And<HumanNameMatches>("Adriano Giudice");
 var result = dbContext.Humen.FindAllBySpec(spec); 
@@ -44,7 +44,7 @@ But it would take additional time, and the whole point of the project is to lear
 
 # The resulting result
 We have a solution that allows specifications to be applied both on the database side, without having to load data into memory.
-The solution also allows client-side specifications to be applied by working with IEnumerable<TModel>, which is extremely convenient.
+The solution also allows client-side specifications to be applied by working with ```IEnumerable<TModel>```, which is extremely convenient.
 
 Of course, this is not the best solution that came to my mind, but it fully satisfies the ideology of the Specifications pattern, all our business requirements are in one place, and we can support them without any problems.
 

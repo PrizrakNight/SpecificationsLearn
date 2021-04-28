@@ -18,24 +18,30 @@ In order to implement your specification, you need to inherit from the base Spec
 ```csharp
 public class HumanIsLife : Specification<Human>
 {
-    protected override IQueryable<Human> ApplySpecificationInternal(IQueryable<Human> models)
+    protected override Expression<Func<Human, bool>> GetSpecification()
     {
-        return models.Where(h => h.IsDead == false);
+        return human => human.IsDead == false;
     }
 }
 ```
 To apply the specification you created, you need to instantiate it and use one of the Find or FindAll extension methods as shown below:
 ```csharp
 var spec = new HumanIsLife();
-var result = dbContext.Humen.FindAll(spec);
+var result = dbContext.Humen.FindAllBySpec(spec);
 ```
-If you need to apply several specifications to one Find or FindAll method, then you need to use the Combine or CombineWith methods, example below:
+If you need to apply several specifications to one FindBySpec or FindAllBySpec method, then you need to use the And or Or methods, example below:
 ```csharp
-var specWithCombine = new HumanIsLife().Combine(new HumanIncludeItems());
-var specWithCombineWith = new HumanIsLife().CombineWith<HumanIncludeItems>();
-var result = dbContext.Humen.FindAll(spec);
+var spec = new HumanIsLife().Or(new HumanIsDead().And(new HumanNameMatches("Adriano Giudice")));
+var result = dbContext.Humen.FindAllBySpec(spec);
 ```
-A combination of specifications is just a Chain of Responsibility pattern.
+
+Of course, you can add extension methods for the ISpecification<TModel> interface to make it easier to combine specifications and do something like:
+```csharp
+var spec = Specification.Create<HumanIsLife>().Or<HumanIsDead>().And<HumanNameMatches>("Adriano Giudice");
+var result = dbContext.Humen.FindAllBySpec(spec); 
+```
+But it would take additional time, and the whole point of the project is to learn to understand what the specification is and how it works :)
+
 # The resulting result
 We got a solution that allows us to apply specifications on the database side, and not in the memory of the client application, which allows us to optimize memory consumption for certain requests.
 

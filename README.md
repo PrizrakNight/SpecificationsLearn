@@ -43,7 +43,8 @@ var result = dbContext.Humen.FindAllBySpec(spec);
 But it would take additional time, and the whole point of the project is to learn to understand what the specification is and how it works :)
 
 # The resulting result
-We got a solution that allows us to apply specifications on the database side, and not in the memory of the client application, which allows us to optimize memory consumption for certain requests.
+We have a solution that allows specifications to be applied both on the database side, without having to load data into memory.
+The solution also allows client-side specifications to be applied by working with IEnumerable<TModel>, which is extremely convenient.
 
 Of course, this is not the best solution that came to my mind, but it fully satisfies the ideology of the Specifications pattern, all our business requirements are in one place, and we can support them without any problems.
 

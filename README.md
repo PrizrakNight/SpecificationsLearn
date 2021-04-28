@@ -2,8 +2,7 @@
 #### The purpose of this project
 The main motivation and goal in creating this project was mastering the 'Specifications' pattern.
 
-#### Why was this decision made?
-
+I decided to use ```Expression<Func<TMode, bool>>``` as my main tool.
 Thanks to expression trees, we can access both Linq2Sql and Linq2Objects without any problems, this is extremely powerful!
 
 #### Summary

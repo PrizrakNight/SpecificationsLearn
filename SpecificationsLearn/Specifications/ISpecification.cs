@@ -1,13 +1,14 @@
 ﻿using SpecificationsLearn.Models;
-using System.Linq;
+using System;
+using System.Linq.Expressions;
 
 namespace SpecificationsLearn.Specifications
 {
     public interface ISpecification<TModel> where TModel : ModelBase
     {
-        ISpecification<TModel> Combine(ISpecification<TModel> specification);
-        ISpecification<TModel> CombineWith<TSpecification>() where TSpecification : ISpecification<TModel>, new();
+        ISpecification<TModel> And(ISpecification<TModel> specification);
+        ISpecification<TModel> Or(ISpecification<TModel> specification);
 
-        IQueryable<TModel> ApplySpecification(IQueryable<TModel> models);
+        Expression<Func<TModel, bool>> ToExpression();
     }
 }

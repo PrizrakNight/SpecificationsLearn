@@ -1,13 +1,19 @@
 ﻿using SpecificationsLearn.Models;
-using System.Linq;
+using System;
+using System.Linq.Expressions;
 
 namespace SpecificationsLearn.Specifications.Implementation
 {
     public class HumanIsLife : Specification<Human>
     {
-        protected override IQueryable<Human> ApplySpecificationInternal(IQueryable<Human> models)
+        //protected override IQueryable<Human> ApplySpecificationInternal(IQueryable<Human> models)
+        //{
+        //    return models.Where(h => h.IsDead == false);
+        //}
+
+        protected override Expression<Func<Human, bool>> GetSpecification()
         {
-            return models.Where(h => h.IsDead == false);
+            return human => human.IsDead == false;
         }
     }
 }

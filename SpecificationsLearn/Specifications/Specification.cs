@@ -1,44 +1,51 @@
 ﻿using SpecificationsLearn.Models;
-using System.Linq;
+using System;
+using System.Linq.Expressions;
 
 namespace SpecificationsLearn.Specifications
 {
     public abstract class Specification<TModel> : ISpecification<TModel>
         where TModel : ModelBase
     {
-        private ISpecification<TModel> _specification;
-
-        public IQueryable<TModel> ApplySpecification(IQueryable<TModel> models)
+        protected Expression<Func<TModel, bool>> CombinedExpression
         {
-            models = ApplySpecificationInternal(models);
+            get
+            {
+                if (_combinedExpression == default)
+                    _combinedExpression = GetSpecification();
 
-            if (_specification != default)
-                models = _specification.ApplySpecification(models);
-
-            return models;
+                return _combinedExpression;
+            }
         }
 
-        public ISpecification<TModel> Combine(ISpecification<TModel> specification)
+        private Expression<Func<TModel, bool>> _combinedExpression;
+
+        public ISpecification<TModel> And(ISpecification<TModel> specification)
         {
-            if (_specification == default) _specification = specification;
-            else _specification.Combine(specification);
+            var parameter = Expression.Parameter(typeof(TModel), "ref_and_model");
+            var expression = Expression.And(Expression.Invoke(CombinedExpression, parameter), Expression.Invoke(specification.ToExpression(), parameter));
+
+            _combinedExpression = Expression.Lambda<Func<TModel, bool>>(expression, parameter);
+
 
             return this;
         }
 
-        public ISpecification<TModel> CombineWith<TSpecification>() where TSpecification : ISpecification<TModel>, new()
+        public ISpecification<TModel> Or(ISpecification<TModel> specification)
         {
-            Combine(new TSpecification());
+            var parameter = Expression.Parameter(typeof(TModel), "ref_or_model");
+            var expression = Expression.Or(Expression.Invoke(CombinedExpression, parameter), Expression.Invoke(specification.ToExpression(), parameter));
+
+            _combinedExpression = Expression.Lambda<Func<TModel, bool>>(expression, parameter);
 
             return this;
         }
 
-        public static ISpecification<TModel> Create<TSpecification>()
-            where TSpecification : ISpecification<TModel>, new()
+        public Expression<Func<TModel, bool>> ToExpression()
         {
-            return new TSpecification();
+            return CombinedExpression;
         }
 
-        protected abstract IQueryable<TModel> ApplySpecificationInternal(IQueryable<TModel> models);
+        protected abstract Expression<Func<TModel, bool>> GetSpecification();
     }
 }

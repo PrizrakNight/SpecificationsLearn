@@ -21,7 +21,7 @@ namespace SpecificationsLearn.Tests.Specifications
         {
             var specification = new WithoutOwner();
 
-            var result = _efCoreFixture.ApplicationDbContext.Items.FindAll(specification);
+            var result = _efCoreFixture.ApplicationDbContext.Items.FindAllBySpec(specification);
 
             Assert.Equal(2, result.Length);
         }
@@ -31,17 +31,7 @@ namespace SpecificationsLearn.Tests.Specifications
         {
             var specification = new HasOwner();
 
-            var result = _efCoreFixture.ApplicationDbContext.Items.FindAll(specification);
-
-            Assert.Equal(4, result.Length);
-        }
-
-        [Fact]
-        public void HasAnyTier_ShouldReturnFour()
-        {
-            var specification = new HasAnyTier(Tier.Blue, Tier.Purple);
-
-            var result = _efCoreFixture.ApplicationDbContext.Items.FindAll(specification);
+            var result = _efCoreFixture.ApplicationDbContext.Items.FindAllBySpec(specification);
 
             Assert.Equal(4, result.Length);
         }
@@ -51,7 +41,7 @@ namespace SpecificationsLearn.Tests.Specifications
         {
             var specification = new SpecificTier(Tier.Purple);
 
-            var result = _efCoreFixture.ApplicationDbContext.Items.FindAll(specification);
+            var result = _efCoreFixture.ApplicationDbContext.Items.FindAllBySpec(specification);
 
             Assert.True(result.All(i => i.Tier == Tier.Purple));
         }
@@ -62,9 +52,19 @@ namespace SpecificationsLearn.Tests.Specifications
             var owner = _efCoreFixture.ApplicationDbContext.Humen.First(h => h.Name == "John Smith");
             var specification = new WithOwner(owner);
 
-            var result = _efCoreFixture.ApplicationDbContext.Items.FindAll(specification);
+            var result = _efCoreFixture.ApplicationDbContext.Items.FindAllBySpec(specification);
 
             Assert.Equal(2, result.Length);
+        }
+
+        [Fact]
+        public void HasAnyTier_ShouldReturnFour()
+        {
+            var specification = new SpecificTier(Tier.Blue).Or(new SpecificTier(Tier.Purple));
+
+            var result = _efCoreFixture.ApplicationDbContext.Items.FindAllBySpec(specification);
+
+            Assert.Equal(4, result.Length);
         }
 
         [Fact]
@@ -72,9 +72,9 @@ namespace SpecificationsLearn.Tests.Specifications
         {
             var owner = _efCoreFixture.ApplicationDbContext.Humen.First(h => h.Name == "John Smith");
             var owner2 = _efCoreFixture.ApplicationDbContext.Humen.First(h => h.Name == "Adriano Giudice");
-            var specification = new WithOwners(owner, owner2);
+            var specification = new WithOwner(owner).Or(new WithOwner(owner2));
 
-            var result = _efCoreFixture.ApplicationDbContext.Items.FindAll(specification);
+            var result = _efCoreFixture.ApplicationDbContext.Items.FindAllBySpec(specification);
 
             Assert.Equal(4, result.Length);
         }
@@ -83,9 +83,9 @@ namespace SpecificationsLearn.Tests.Specifications
         public void WithOwnerAndSpecificTier_ShouldReturnOne()
         {
             var owner = _efCoreFixture.ApplicationDbContext.Humen.First(h => h.Name == "John Smith");
-            var specification = new WithOwner(owner).Combine(new SpecificTier(Tier.White));
+            var specification = new WithOwner(owner).And(new SpecificTier(Tier.White));
 
-            var result = _efCoreFixture.ApplicationDbContext.Items.FindAll(specification);
+            var result = _efCoreFixture.ApplicationDbContext.Items.FindAllBySpec(specification);
 
             Assert.Single(result);
         }
@@ -94,9 +94,9 @@ namespace SpecificationsLearn.Tests.Specifications
         public void WithOwnerAndHasAnyTier_ShouldReturnTwoItems()
         {
             var owner = _efCoreFixture.ApplicationDbContext.Humen.First(h => h.Name == "John Smith");
-            var specification = new WithOwner(owner).Combine(new HasAnyTier(Tier.White, Tier.Blue));
+            var specification = new WithOwner(owner).And(new SpecificTier(Tier.White).Or(new SpecificTier(Tier.Blue)));
 
-            var result = _efCoreFixture.ApplicationDbContext.Items.FindAll(specification);
+            var result = _efCoreFixture.ApplicationDbContext.Items.FindAllBySpec(specification);
 
             Assert.Equal(2, result.Length);
         }

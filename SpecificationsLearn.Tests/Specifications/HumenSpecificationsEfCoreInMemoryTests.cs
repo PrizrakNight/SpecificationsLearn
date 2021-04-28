@@ -1,7 +1,6 @@
 ﻿using SpecificationsLearn.Specifications;
 using SpecificationsLearn.Specifications.Implementation;
 using SpecificationsLearn.Tests.Fixtures;
-using System.Linq;
 using Xunit;
 
 namespace SpecificationsLearn.Tests.Specifications
@@ -16,36 +15,57 @@ namespace SpecificationsLearn.Tests.Specifications
         }
 
         [Fact]
-        public void HumanIsDead_WithoutIncludeItems_ShouldReturnTwoWithoutItems()
+        public void HumanIsDead_ShouldReturnTwo()
         {
             var specification = new HumanIsDead();
 
-            var result = _efCoreFixture.ApplicationDbContext.Humen.FindAll(specification);
+            var result = _efCoreFixture.ApplicationDbContext.Humen.FindAllBySpec(specification);
 
             Assert.Equal(2, result.Length);
-            Assert.True(result.All(h => h.Items == default));
         }
 
         [Fact]
-        public void HumanIsLife_WithIncludeItems_ShouldReturnTwoWithItems()
+        public void HumanIsLife_ShouldReturnTwo()
         {
-            var specification = new HumanIsLife().CombineWith<HumanIncludeItems>();
+            var specification = new HumanIsLife();
 
-            var result = _efCoreFixture.ApplicationDbContext.Humen.FindAll(specification);
+            var result = _efCoreFixture.ApplicationDbContext.Humen.FindAllBySpec(specification);
 
             Assert.Equal(2, result.Length);
-            Assert.True(result.All(h => h.Items.Count > 0));
         }
 
         [Fact]
-        public void HumanIncludeItems_ShouldReturnFourWithItemsNotNull()
+        public void HumanIsLifeOfDead_ShouldReturnFour()
         {
-            var specification = new HumanIncludeItems();
+            var specification = new HumanIsLife().Or(new HumanIsDead());
 
-            var result = _efCoreFixture.ApplicationDbContext.Humen.FindAll(specification);
+            var result = _efCoreFixture.ApplicationDbContext.Humen.FindAllBySpec(specification);
 
             Assert.Equal(4, result.Length);
-            Assert.True(result.All(h => h.Items != default));
+        }
+
+        [Fact]
+        public void HumanNameMatches_ShouldReturnAdrianoGiudice()
+        {
+            var targetName = "Adriano Giudice";
+            var specification = new HumanNameMatches(targetName);
+
+            var result = _efCoreFixture.ApplicationDbContext.Humen.FindBySpec(specification);
+
+            Assert.NotNull(result);
+            Assert.Equal(targetName, result.Name);
+        }
+
+        [Fact]
+        public void HumanIsLifeAndMatchesName_ShouldReturnJohnSmith()
+        {
+            var targetName = "John Smith";
+            var specification = new HumanIsLife().And(new HumanNameMatches(targetName));
+
+            var result = _efCoreFixture.ApplicationDbContext.Humen.FindBySpec(specification);
+
+            Assert.NotNull(result);
+            Assert.Equal(targetName, result.Name);
         }
     }
 }

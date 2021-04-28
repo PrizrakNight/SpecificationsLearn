@@ -1,5 +1,6 @@
 ﻿using SpecificationsLearn.Models;
-using System.Linq;
+using System;
+using System.Linq.Expressions;
 
 namespace SpecificationsLearn.Specifications.Implementation
 {
@@ -12,9 +13,14 @@ namespace SpecificationsLearn.Specifications.Implementation
             _tier = tier;
         }
 
-        protected override IQueryable<Item> ApplySpecificationInternal(IQueryable<Item> models)
+        protected override Expression<Func<Item, bool>> GetSpecification()
         {
-            return models.Where(i => i.Tier == _tier);
+            return item => item.Tier == _tier;
         }
+
+        //protected override IQueryable<Item> ApplySpecificationInternal(IQueryable<Item> models)
+        //{
+        //    return models.Where(i => i.Tier == _tier);
+        //}
     }
 }
